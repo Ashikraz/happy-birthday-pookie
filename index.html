@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For You</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Great+Vibes&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #010113;
+    overflow: hidden;
+  }
+
+  /* ===== SCREEN STAGE ===== */
+  .stage {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .screen-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.1s ease;
+    background: #010113;
+  }
+
+  .screen-frame.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ===== NEXT BUTTON ===== */
+  #next-btn {
+    position: fixed;
+    right: 5vw;
+    bottom: 6vh;
+    z-index: 999;
+    padding: 0.75em 1.9em;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(1rem, 1.4vw + 0.6rem, 1.35rem);
+    letter-spacing: 0.06em;
+    color: #fff3e6;
+    background: linear-gradient(135deg, rgba(255, 94, 0, 0.28), rgba(255, 105, 155, 0.28));
+    border: 1px solid rgba(255, 214, 170, 0.65);
+    border-radius: 999px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+    pointer-events: none;
+    transition: opacity 0.9s ease, transform 0.9s ease, box-shadow 0.3s ease, background 0.3s ease;
+    box-shadow: 0 0 0 rgba(255, 170, 120, 0);
+  }
+
+  #next-btn.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    animation: next-pulse 2.6s ease-in-out infinite;
+  }
+
+  #next-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 94, 0, 0.45), rgba(255, 105, 155, 0.45));
+    box-shadow: 0 0 26px rgba(255, 150, 110, 0.55);
+  }
+
+  #next-btn .arrow {
+    display: inline-block;
+    margin-left: 0.4em;
+    transition: transform 0.3s ease;
+  }
+
+  #next-btn:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  @keyframes next-pulse {
+    0%, 100% { box-shadow: 0 0 0 rgba(255, 170, 120, 0.0); }
+    50% { box-shadow: 0 0 18px rgba(255, 170, 120, 0.35); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #next-btn.show { animation: none; }
+    .screen-frame { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="stage">
+    <iframe id="frame1" class="screen-frame active" src="screen1.html" title="Screen 1" allow="autoplay"></iframe>
+    <iframe id="frame2" class="screen-frame" title="Screen 2" allow="autoplay"></iframe>
+  </div>
+
+  <button id="next-btn" type="button">Next <span class="arrow">➜</span></button>
+
+  <script>
+    (function () {
+      var frame1 = document.getElementById("frame1");
+      var frame2 = document.getElementById("frame2");
+      var nextBtn = document.getElementById("next-btn");
+
+      var SCREEN2_SRC = "screen2.html";
+      var revealed = false;
+      var navigated = false;
+
+      function revealNextButton() {
+        if (revealed) return;
+        revealed = true;
+        nextBtn.classList.add("show");
+      }
+
+      // Preferred trigger: screen1 tells us when its intro has finished revealing.
+      window.addEventListener("message", function (event) {
+        if (event.data === "screen1:ready-for-next") {
+          revealNextButton();
+        }
+      });
+
+      // Fallback: if the message never arrives for any reason, still reveal
+      // the button after a short wait so the user is never stuck.
+      setTimeout(revealNextButton, 12000);
+
+      function goToScreen2() {
+        if (navigated) return;
+        navigated = true;
+
+        // Lazy-load screen 2 only when the user actually navigates to it.
+        frame2.src = SCREEN2_SRC;
+
+        frame2.classList.add("active");
+        frame1.classList.remove("active");
+        nextBtn.classList.remove("show");
+        nextBtn.style.pointerEvents = "none";
+      }
+
+      nextBtn.addEventListener("click", goToScreen2);
+    })();
+  </script>
+
+</body>
+</html>
