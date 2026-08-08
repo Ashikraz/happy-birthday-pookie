@@ -48,7 +48,8 @@
         body.dark-theme .theme-btn,
         body.dark-theme .memories-btn,
         body.dark-theme .critter-btn,
-        body.dark-theme .game-btn {
+        body.dark-theme .game-btn,
+        body.dark-theme .wish-star-btn {
             background: rgba(32, 18, 42, 0.74);
         }
 
@@ -86,15 +87,20 @@
         body.dark-theme .envelope-overlay,
         body.dark-theme .game-overlay,
         body.dark-theme .prize-overlay,
+        body.dark-theme .wish-overlay,
         body.dark-theme .lightbox,
         body.dark-theme .game-container,
         body.dark-theme .prize-box,
+        body.dark-theme .wish-container,
         body.dark-theme .letter-face,
         body.dark-theme .envelope-back,
         body.dark-theme .game-hud,
         body.dark-theme .game-close-btn,
+        body.dark-theme .wish-close-btn,
         body.dark-theme .cake-action-btn,
         body.dark-theme .prize-btn,
+        body.dark-theme .wish-again-btn,
+        body.dark-theme .wish-done-btn,
         body.dark-theme .lightbox .lb-close,
         body.dark-theme .lightbox .lb-nav {
             background: rgba(23, 13, 29, 0.86);
@@ -129,7 +135,11 @@
         body.dark-theme .empty-note,
         body.dark-theme .cake-sub,
         body.dark-theme .modal-header h2,
-        body.dark-theme .letter-swipe-hint {
+        body.dark-theme .letter-swipe-hint,
+        body.dark-theme .wish-heading,
+        body.dark-theme .wish-sub-text,
+        body.dark-theme .constellation-name,
+        body.dark-theme .wish-echo {
             color: #ffd3e7;
         }
 
@@ -149,7 +159,8 @@
         body.dark-theme .critter-btn,
         body.dark-theme .music-btn,
         body.dark-theme .theme-btn,
-        body.dark-theme .game-btn {
+        body.dark-theme .game-btn,
+        body.dark-theme .wish-star-btn {
             -webkit-text-stroke: 1.2px #4aa8ff !important;
             text-stroke: 1.2px #4aa8ff !important;
         }
@@ -2105,6 +2116,237 @@
             border-color: var(--cryo);
         }
 
+        /* ===== MAKE A WISH / CONSTELLATION ===== */
+        .wish-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 75;
+            background: var(--overlay-bg);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .wish-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .wish-container {
+            position: relative;
+            width: min(430px, 92vw);
+            max-height: 88vh;
+            overflow-y: auto;
+            background: var(--panel-strong);
+            backdrop-filter: blur(6px);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 36px 24px 28px;
+            box-shadow: 0 0 40px rgba(255, 142, 181, 0.15);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .wish-overlay.open .wish-container {
+            transform: scale(1);
+        }
+
+        .wish-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--line);
+            background: var(--glass-bg);
+            color: var(--frost);
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            transition: all 0.2s ease;
+        }
+
+        .wish-close-btn:hover {
+            color: var(--cryo-deep);
+            border-color: var(--cryo);
+        }
+
+        .wish-icon {
+            font-size: 38px;
+            margin-bottom: 4px;
+            animation: wishFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes wishFloat {
+            0%, 100% { transform: translateY(0) rotate(-4deg); }
+            50% { transform: translateY(-8px) rotate(4deg); }
+        }
+
+        .wish-heading {
+            font-family: Georgia, serif;
+            font-size: 23px;
+            color: var(--cryo-deep);
+            margin: 4px 0 6px;
+        }
+
+        .wish-sub-text {
+            font-size: 13px;
+            color: var(--frost);
+            margin: 0 0 18px;
+            line-height: 1.5;
+        }
+
+        .wish-textarea {
+            width: 100%;
+            min-height: 90px;
+            resize: vertical;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--cryo-deep);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color .3s ease, box-shadow .3s ease;
+        }
+
+        .wish-textarea::placeholder {
+            color: var(--frost);
+            opacity: .6;
+        }
+
+        .wish-textarea:focus {
+            border-color: var(--cryo);
+            box-shadow: 0 0 20px rgba(255, 142, 181, 0.25);
+        }
+
+        .wish-submit-btn {
+            margin-top: 16px;
+            padding: 12px 30px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: linear-gradient(135deg, var(--cryo-bright), var(--cryo));
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .04em;
+            cursor: pointer;
+            transition: all .3s ease;
+            box-shadow: 0 4px 20px rgba(255, 142, 181, .25);
+        }
+
+        .wish-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 142, 181, .35);
+        }
+
+        .wish-submit-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .wish-input-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .wish-input-stage.hide {
+            display: none;
+        }
+
+        .wish-result-stage {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .wish-result-stage.show {
+            display: flex;
+        }
+
+        .constellation-canvas {
+            width: 100%;
+            height: 260px;
+            border-radius: 12px;
+            background: radial-gradient(ellipse at 50% 40%, #241338 0%, #0c0716 75%);
+            border: 1px solid var(--line);
+            box-shadow: 0 0 30px rgba(255, 142, 181, .18) inset;
+            display: block;
+        }
+
+        .constellation-info {
+            margin-top: 14px;
+        }
+
+        .constellation-element {
+            font-size: 12px;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--frost);
+            opacity: .8;
+            animation: fadeIn .6s ease forwards;
+        }
+
+        .constellation-name {
+            font-family: Georgia, serif;
+            font-size: 22px;
+            color: var(--cryo-deep);
+            margin: 6px 0 10px;
+            opacity: 0;
+            animation: fadeIn .8s ease .2s forwards;
+        }
+
+        .wish-echo {
+            font-size: 14px;
+            color: var(--cryo-deep);
+            font-style: italic;
+            opacity: 0;
+            line-height: 1.5;
+            word-break: break-word;
+            animation: fadeIn .8s ease .4s forwards;
+        }
+
+        .wish-result-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .wish-again-btn,
+        .wish-done-btn {
+            padding: 10px 22px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .7);
+            color: var(--cryo-deep);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .wish-again-btn:hover,
+        .wish-done-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 24px rgba(255, 142, 181, .2);
+            border-color: var(--cryo);
+        }
+
         .prize-overlay {
             position: fixed;
             inset: 0;
@@ -2613,6 +2855,11 @@
             <span class="diamond"></span>
             🏹 Game
         </button>
+
+        <button class="game-btn wish-star-btn" id="wishStarBtn">
+            <span class="diamond"></span>
+            ✨ Make a Wish
+        </button>
     </div>
 
     <div class="modal-overlay" id="modalOverlay">
@@ -2734,6 +2981,33 @@
                 <span>🏹 <span id="gameArrows">10</span></span>
             </div>
             <canvas class="game-canvas" id="gameCanvas"></canvas>
+        </div>
+    </div>
+
+    <div class="wish-overlay" id="wishOverlay">
+        <div class="wish-container">
+            <button class="wish-close-btn" id="wishClose">✕</button>
+
+            <div class="wish-input-stage" id="wishInputStage">
+                <div class="wish-icon">🌠</div>
+                <h2 class="wish-heading">Make a Wish</h2>
+                <p class="wish-sub-text">Close your eyes, think of something you want most, and write it below.</p>
+                <textarea class="wish-textarea" id="wishTextarea" maxlength="200" placeholder="I wish for..."></textarea>
+                <button class="wish-submit-btn" id="wishSubmitBtn">Send to the Stars ✨</button>
+            </div>
+
+            <div class="wish-result-stage" id="wishResultStage">
+                <canvas class="constellation-canvas" id="constellationCanvas"></canvas>
+                <div class="constellation-info">
+                    <div class="constellation-element" id="constellationElement">✨ Written in the Stars</div>
+                    <h2 class="constellation-name" id="constellationName">Constellation Name</h2>
+                    <p class="wish-echo" id="wishEcho"></p>
+                </div>
+                <div class="wish-result-actions">
+                    <button class="wish-again-btn" id="wishAgainBtn">Make Another Wish</button>
+                    <button class="wish-done-btn" id="wishDoneBtn">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -3739,6 +4013,318 @@
             }
         }
 
+        // ========== MAKE A WISH / CONSTELLATION ==========
+        const wishStarBtn = document.getElementById('wishStarBtn');
+        const wishOverlay = document.getElementById('wishOverlay');
+        const wishClose = document.getElementById('wishClose');
+        const wishInputStage = document.getElementById('wishInputStage');
+        const wishResultStage = document.getElementById('wishResultStage');
+        const wishTextarea = document.getElementById('wishTextarea');
+        const wishSubmitBtn = document.getElementById('wishSubmitBtn');
+        const wishAgainBtn = document.getElementById('wishAgainBtn');
+        const wishDoneBtn = document.getElementById('wishDoneBtn');
+        const constellationCanvas = document.getElementById('constellationCanvas');
+        const constellationElement = document.getElementById('constellationElement');
+        const constellationName = document.getElementById('constellationName');
+        const wishEcho = document.getElementById('wishEcho');
+
+        // Real night-sky constellations (approximate star layouts, own line art)
+        const constellationTemplates = [
+            {
+                element: 'The Hunter',
+                name: 'Orion',
+                color: '#bcd4ff',
+                glow: 'rgba(188, 212, 255, 0.85)',
+                stars: [
+                    [0.28, 0.15], [0.68, 0.15], [0.38, 0.45],
+                    [0.48, 0.48], [0.58, 0.42], [0.30, 0.85], [0.66, 0.85]
+                ],
+                edges: [[0, 2], [1, 4], [2, 3], [3, 4], [2, 5], [4, 6]]
+            },
+            {
+                element: 'The Great Bear',
+                name: 'Ursa Major',
+                color: '#a7c8ff',
+                glow: 'rgba(167, 200, 255, 0.85)',
+                stars: [
+                    [0.20, 0.30], [0.22, 0.55], [0.45, 0.60],
+                    [0.48, 0.35], [0.62, 0.30], [0.75, 0.22], [0.88, 0.12]
+                ],
+                edges: [[0, 1], [1, 2], [2, 3], [3, 0], [3, 4], [4, 5], [5, 6]]
+            },
+            {
+                element: 'The Queen',
+                name: 'Cassiopeia',
+                color: '#ffd98e',
+                glow: 'rgba(255, 217, 142, 0.85)',
+                stars: [
+                    [0.10, 0.55], [0.30, 0.20], [0.50, 0.55], [0.70, 0.20], [0.90, 0.50]
+                ],
+                edges: [[0, 1], [1, 2], [2, 3], [3, 4]]
+            },
+            {
+                element: 'The Swan',
+                name: 'Cygnus',
+                color: '#e8f0ff',
+                glow: 'rgba(232, 240, 255, 0.85)',
+                stars: [
+                    [0.50, 0.10], [0.50, 0.42], [0.50, 0.85], [0.22, 0.42], [0.78, 0.35]
+                ],
+                edges: [[0, 1], [1, 2], [1, 3], [1, 4]]
+            },
+            {
+                element: 'The Lyre',
+                name: 'Lyra',
+                color: '#d7a8ff',
+                glow: 'rgba(215, 168, 255, 0.85)',
+                stars: [
+                    [0.50, 0.12], [0.35, 0.45], [0.40, 0.75], [0.65, 0.70], [0.60, 0.40]
+                ],
+                edges: [[0, 4], [4, 1], [1, 2], [2, 3], [3, 4]]
+            },
+            {
+                element: 'The Lion',
+                name: 'Leo',
+                color: '#ffcf6b',
+                glow: 'rgba(255, 207, 107, 0.85)',
+                stars: [
+                    [0.30, 0.75], [0.28, 0.55], [0.32, 0.35], [0.42, 0.22],
+                    [0.55, 0.20], [0.65, 0.55], [0.85, 0.65]
+                ],
+                edges: [[0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6]]
+            },
+            {
+                element: 'The Scorpion',
+                name: 'Scorpius',
+                color: '#ff8a7a',
+                glow: 'rgba(255, 138, 122, 0.85)',
+                stars: [
+                    [0.22, 0.15], [0.15, 0.22], [0.30, 0.32], [0.42, 0.42],
+                    [0.55, 0.55], [0.62, 0.68], [0.58, 0.80], [0.68, 0.88], [0.75, 0.82]
+                ],
+                edges: [[0, 2], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8]]
+            }
+        ];
+
+        let currentConstellation = null;
+        let constellationAnimId = null;
+        let constellationStartTime = null;
+        let sparkleParticles = [];
+
+        function resizeConstellationCanvas() {
+            const rect = constellationCanvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            constellationCanvas.width = rect.width * dpr;
+            constellationCanvas.height = rect.height * dpr;
+            const cctx = constellationCanvas.getContext('2d');
+            cctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function openWishOverlay() {
+            wishOverlay.classList.add('open');
+            wishInputStage.classList.remove('hide');
+            wishResultStage.classList.remove('show');
+            wishTextarea.value = '';
+            wishSubmitBtn.disabled = false;
+            setTimeout(() => wishTextarea.focus(), 350);
+        }
+
+        function closeWishOverlay() {
+            wishOverlay.classList.remove('open');
+            stopConstellationAnimation();
+        }
+
+        function backToWishInput() {
+            wishResultStage.classList.remove('show');
+            wishInputStage.classList.remove('hide');
+            wishTextarea.value = '';
+            wishSubmitBtn.disabled = false;
+            stopConstellationAnimation();
+            setTimeout(() => wishTextarea.focus(), 200);
+        }
+
+        function stopConstellationAnimation() {
+            if (constellationAnimId) {
+                cancelAnimationFrame(constellationAnimId);
+                constellationAnimId = null;
+            }
+            constellationStartTime = null;
+            sparkleParticles = [];
+        }
+
+        function submitWish() {
+            const wishText = wishTextarea.value.trim();
+            if (!wishText) {
+                wishTextarea.focus();
+                wishTextarea.style.borderColor = 'var(--cryo)';
+                return;
+            }
+
+            wishInputStage.classList.add('hide');
+            wishResultStage.classList.add('show');
+
+            const template = constellationTemplates[Math.floor(Math.random() * constellationTemplates.length)];
+            currentConstellation = template;
+
+            constellationElement.textContent = template.element;
+            constellationName.textContent = template.name;
+            wishEcho.textContent = `"${wishText}"`;
+
+            // restart the reveal animations on the text elements
+            [constellationElement, constellationName, wishEcho].forEach(el => {
+                el.style.animation = 'none';
+                void el.offsetWidth;
+                el.style.animation = '';
+            });
+
+            setTimeout(() => {
+                resizeConstellationCanvas();
+                startConstellationAnimation(template);
+            }, 50);
+        }
+
+        function startConstellationAnimation(template) {
+            stopConstellationAnimation();
+            constellationStartTime = performance.now();
+            sparkleParticles = [];
+
+            const STAR_PHASE_DURATION = 1400;
+            const STAR_STAGGER = 130;
+            const LINE_START = STAR_PHASE_DURATION + template.stars.length * STAR_STAGGER * 0.4;
+            const LINE_PER_EDGE = 260;
+
+            function frame(now) {
+                const cctx = constellationCanvas.getContext('2d');
+                const rect = constellationCanvas.getBoundingClientRect();
+                const W = rect.width;
+                const H = rect.height;
+                const elapsed = now - constellationStartTime;
+
+                cctx.clearRect(0, 0, W, H);
+
+                // soft twinkling background stars
+                cctx.save();
+                for (let i = 0; i < 40; i++) {
+                    const bx = (i * 97 % 100) / 100 * W;
+                    const by = (i * 53 % 100) / 100 * H;
+                    const tw = 0.3 + 0.3 * Math.sin(elapsed / 500 + i);
+                    cctx.globalAlpha = Math.max(0, tw);
+                    cctx.fillStyle = '#ffffff';
+                    cctx.beginPath();
+                    cctx.arc(bx, by, 1, 0, Math.PI * 2);
+                    cctx.fill();
+                }
+                cctx.restore();
+
+                const points = template.stars.map(([px, py]) => [px * W, py * H]);
+
+                // draw edges (progressively)
+                template.edges.forEach((edge, idx) => {
+                    const edgeStart = LINE_START + idx * LINE_PER_EDGE * 0.5;
+                    const progress = Math.min(1, Math.max(0, (elapsed - edgeStart) / LINE_PER_EDGE));
+                    if (progress <= 0) return;
+
+                    const [x1, y1] = points[edge[0]];
+                    const [x2, y2] = points[edge[1]];
+                    const ex = x1 + (x2 - x1) * progress;
+                    const ey = y1 + (y2 - y1) * progress;
+
+                    cctx.save();
+                    cctx.strokeStyle = template.glow;
+                    cctx.shadowColor = template.glow;
+                    cctx.shadowBlur = 8;
+                    cctx.lineWidth = 1.6;
+                    cctx.beginPath();
+                    cctx.moveTo(x1, y1);
+                    cctx.lineTo(ex, ey);
+                    cctx.stroke();
+                    cctx.restore();
+                });
+
+                // draw stars (fade + pop in with stagger)
+                points.forEach(([sx, sy], idx) => {
+                    const starStart = idx * STAR_STAGGER;
+                    const appear = Math.min(1, Math.max(0, (elapsed - starStart) / STAR_PHASE_DURATION));
+                    if (appear <= 0) return;
+
+                    const pulse = 1 + 0.25 * Math.sin(elapsed / 260 + idx);
+                    const radius = (2 + appear * 2.4) * (appear < 1 ? appear : pulse);
+
+                    cctx.save();
+                    cctx.globalAlpha = Math.min(1, appear * 1.2);
+                    const grad = cctx.createRadialGradient(sx, sy, 0, sx, sy, radius * 4);
+                    grad.addColorStop(0, template.glow);
+                    grad.addColorStop(1, 'rgba(0,0,0,0)');
+                    cctx.fillStyle = grad;
+                    cctx.beginPath();
+                    cctx.arc(sx, sy, radius * 4, 0, Math.PI * 2);
+                    cctx.fill();
+
+                    cctx.fillStyle = '#ffffff';
+                    cctx.beginPath();
+                    cctx.arc(sx, sy, Math.max(1.4, radius * 0.6), 0, Math.PI * 2);
+                    cctx.fill();
+                    cctx.restore();
+                });
+
+                // sparkle particles once the constellation is fully drawn
+                const totalDuration = LINE_START + template.edges.length * LINE_PER_EDGE * 0.5 + LINE_PER_EDGE;
+                if (elapsed > totalDuration) {
+                    if (sparkleParticles.length < 26 && Math.random() < 0.4) {
+                        const p = points[Math.floor(Math.random() * points.length)];
+                        sparkleParticles.push({
+                            x: p[0] + (Math.random() - 0.5) * 30,
+                            y: p[1] + (Math.random() - 0.5) * 30,
+                            vy: -0.3 - Math.random() * 0.4,
+                            life: 1
+                        });
+                    }
+                    sparkleParticles.forEach(p => {
+                        p.y += p.vy;
+                        p.life -= 0.012;
+                    });
+                    sparkleParticles = sparkleParticles.filter(p => p.life > 0);
+                    sparkleParticles.forEach(p => {
+                        cctx.save();
+                        cctx.globalAlpha = Math.max(0, p.life);
+                        cctx.fillStyle = template.color;
+                        cctx.shadowColor = template.glow;
+                        cctx.shadowBlur = 6;
+                        cctx.beginPath();
+                        cctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
+                        cctx.fill();
+                        cctx.restore();
+                    });
+                }
+
+                constellationAnimId = requestAnimationFrame(frame);
+            }
+
+            constellationAnimId = requestAnimationFrame(frame);
+        }
+
+        wishStarBtn.addEventListener('click', openWishOverlay);
+        wishClose.addEventListener('click', closeWishOverlay);
+        wishDoneBtn.addEventListener('click', closeWishOverlay);
+        wishAgainBtn.addEventListener('click', backToWishInput);
+        wishSubmitBtn.addEventListener('click', submitWish);
+        wishTextarea.addEventListener('input', () => {
+            wishTextarea.style.borderColor = '';
+        });
+        wishTextarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                submitWish();
+            }
+        });
+        wishOverlay.addEventListener('click', (e) => {
+            if (e.target === wishOverlay) closeWishOverlay();
+        });
+        window.addEventListener('resize', () => {
+            if (wishOverlay.classList.contains('open') && wishResultStage.classList.contains('show')) {
+                resizeConstellationCanvas();
+            }
+        });
+
         // ========== PRIZE BOX ==========
         function openPrizeBox() {
             prizeOptions.style.display = 'flex';
@@ -3811,6 +4397,8 @@
 
         document.getElementById('gameBtn').style.opacity = '0';
         document.getElementById('gameBtn').style.animation = 'fadeIn 1s ease 1.9s forwards';
+        document.getElementById('wishStarBtn').style.opacity = '0';
+        document.getElementById('wishStarBtn').style.animation = 'fadeIn 1s ease 2.0s forwards';
         document.getElementById('themeBtn').style.opacity = '0';
         document.getElementById('themeBtn').style.animation = 'fadeIn 1s ease 1.9s forwards';
     </script>
